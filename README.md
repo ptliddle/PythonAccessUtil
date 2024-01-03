@@ -4,6 +4,10 @@ PythonAccessUtil is a very simple package designed to work in concert with [Pyth
                                                                                    
 ### Usage
 
+NOTE: As of Jan 2023 i am not aware of any app that has tried to make it into the AppStore utilizing this package. If you try please let me know
+
+Make sure you allow libraries to be loaded without validaion by going to your App Target and checking `Disable Library Validation` under `Signing & Capabilities->Hardened Runtime->Runtime Exceptions`
+
 Create an instance of `PythonSetup(suggestedPythonLibPath:)` optionally handing it the suggested location to find the Python libraries. If no suggested path is entered it will default to suggesting `/usr/local/bin/python3/lib`
 
 Instantiation of the PythonSetup object should be done before using any class or struct within a file that imports PythonKit.
