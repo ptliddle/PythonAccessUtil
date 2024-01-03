@@ -14,7 +14,7 @@ Instantiation of the PythonSetup object should be done before using any class or
 Add the following dependency to your `Package.swift` manifest:
 
 ```swift
-.package(url: "", .branch("master"))
+.package(url: "https://github.com/ptliddle/PythonAccessUtil", .branch("master"))
 ```
 
 ### Tools
