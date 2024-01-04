@@ -66,7 +66,7 @@ open class PythonSetup {
         var pythonDirUrl: URL = URL(fileURLWithPath: "")
         
         // Uncomment this to wipe stored bookmark, useful when testing code
-         UserDefaults.standard.removeObject(forKey: "PYTHON_LIB_DIR")
+        // UserDefaults.standard.removeObject(forKey: "PYTHON_LIB_DIR")
         
         do {
             // Check to see if we have a secure bookmark first
