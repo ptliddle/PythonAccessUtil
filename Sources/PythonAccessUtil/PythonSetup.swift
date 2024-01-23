@@ -26,7 +26,7 @@ open class PythonSetup {
  
     var bookmarkURL: URL?
 
-    static let pythonlib = "libpython3.10"
+    static let pythonlibBase = "libpython"
     static let applePythonExt = "dylib"
     static let linuxPythonExt = "so"
     
@@ -36,9 +36,16 @@ open class PythonSetup {
     
     var securityScopedResourceUrl: URL?
     let suggestedPythonLibPath: String
+    let pythonlib: String
     
-    public init(suggestedPythonLibPath: String = PythonSetup.basePythonLibDir) {
+    
+    /// Create a PythonSetup object to allow access to the python libraries on MacOS
+    /// - Parameters:
+    ///   - suggestedPythonLibPath: An initial location for where the file explorer will be opened to for the user to select a location
+    ///   - pythonVersion: The python version associated with the python library path. This is used to find the correct libpython library in the lib path
+    public init(suggestedPythonLibPath: String = PythonSetup.basePythonLibDir, pythonVersion: String = "3.10") {
         self.suggestedPythonLibPath = suggestedPythonLibPath
+        self.pythonlib = Self.pythonlibBase + "\(pythonVersion)"
     }
     
     private func requestAccessAndCreateBookmark() async throws -> URL {
@@ -65,7 +72,8 @@ open class PythonSetup {
         
         var pythonDirUrl: URL = URL(fileURLWithPath: "")
         
-        // Uncomment this to wipe stored bookmark, useful when testing code
+        // Uncomment this to wipe stored bookmark, useful when testing code.
+        // This line can be copied into your app to wipe the Python location on launch
         // UserDefaults.standard.removeObject(forKey: "PYTHON_LIB_DIR")
         
         do {
@@ -95,11 +103,11 @@ open class PythonSetup {
         
         let libPath: String
         if #available(macOS 13, *) {
-            let pythonLibUrl = pythonDirUrl.appending(component: Self.pythonlib).appendingPathExtension(Self.applePythonExt) //URL(string: SwiftLangchainWrapper.basePythonLibDir)!.appending(component: Self.pythonlib).appendingPathExtension(Self.applePythonExt)
+            let pythonLibUrl = pythonDirUrl.appending(component: pythonlib).appendingPathExtension(Self.applePythonExt)
             libPath = pythonLibUrl.path()
         }
         else {
-            let pythonLibUrl = pythonDirUrl.appendingPathComponent(Self.pythonlib).appendingPathExtension(Self.applePythonExt) //URL(string: SwiftLangchainWrapper.basePythonLibDir)!.appending(component: Self.pythonlib).appendingPathExtension(Self.applePythonExt)
+            let pythonLibUrl = pythonDirUrl.appendingPathComponent(pythonlib).appendingPathExtension(Self.applePythonExt)
             libPath = pythonLibUrl.path
         }
             
@@ -127,7 +135,7 @@ open class PythonSetup {
         let openPanel = NSOpenPanel()
         openPanel.message = "You need to select the location of the directory containing your Python libraries to allow access (defaulted path is a guess at the location)"
         openPanel.showsResizeIndicator = true
-        openPanel.showsHiddenFiles = false
+        openPanel.showsHiddenFiles = true
         openPanel.canChooseFiles = false
         openPanel.canChooseDirectories = true
         openPanel.canCreateDirectories = false
