@@ -121,8 +121,21 @@ open class PythonSetup {
         stopSecureAccess()
     }
     
+    public var isSetup: Bool {
+        if let pythonLibDirBookmarkData = UserDefaults.standard.data(forKey: "PYTHON_LIB_DIR") {
+            var isStale = false
+            bookmarkURL = try? URL(resolvingBookmarkData: pythonLibDirBookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &isStale)
+            return (bookmarkURL != nil) && !isStale
+        }
+        return false
+    }
+    
     public func stopSecureAccess() {
         securityScopedResourceUrl?.stopAccessingSecurityScopedResource()
+    }
+    
+    public static func resetSetup() {
+        UserDefaults.standard.removeObject(forKey: "PYTHON_LIB_DIR")
     }
     
     @MainActor
